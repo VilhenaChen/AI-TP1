@@ -10,15 +10,18 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI.setupWithNavController
 import pt.vilhena.ai.trabalhopratico.databinding.ActivityMainBinding
-import pt.vilhena.ai.trabalhopratico.ui.MainFragment
-import pt.vilhena.ai.trabalhopratico.ui.TimelineFragment
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
+
+    private lateinit var navController: NavController
 
     //  Permissions array, depending on build android version
     private val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -72,16 +75,20 @@ class MainActivity : AppCompatActivity() {
 
         requestPermissions()
 
-        binding.bottomNavigationBar.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.home -> replaceFragment(MainFragment())
-                R.id.timeline -> replaceFragment(TimelineFragment())
-                else -> {
-                    Log.v("App", "This should not happen")
-                    false
-                }
-            }
-        }
+//        binding.bottomNavigationBar.setOnItemSelectedListener { item ->
+//            when (item.itemId) {
+//                R.id.home -> replaceFragment(MainFragment())
+//                R.id.timeline -> replaceFragment(TimelineFragment())
+//                else -> {
+//                    Log.v("App", "This should not happen")
+//                    false
+//                }
+//            }
+//        }
+
+        val navHostFragment = supportFragmentManager.findFragmentById(binding.fragmentContainer.id) as NavHostFragment
+        navController = navHostFragment.navController
+        setupWithNavController(binding.bottomNavigationBar, navController)
     }
 
     //  Request necessary permissions

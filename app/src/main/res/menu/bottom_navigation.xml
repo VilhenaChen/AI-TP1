@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/home"
-        android:title="Home"
+        android:id="@+id/mainFragment"
+        android:title="@string/home"
         android:icon="@drawable/home_ic"/>
     <item
-        android:id="@+id/timeline"
-        android:title="Timeline"
+        android:id="@+id/timelineFragment"
+        android:title="@string/timeline"
         android:icon="@drawable/timeline_ic" />
+    <item
+        android:id="@+id/aboutFragment"
+        android:title="@string/about"
+        android:icon="@drawable/ic_info" />
 </menu>

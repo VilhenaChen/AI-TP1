@@ -4,26 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.TimelineFragment">
+    tools:context=".ui.AboutFragment">
 
     <TextView
-        android:id="@+id/timelineTitle"
+        android:id="@+id/aboutTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/title"
-        android:text="@string/timeline"
+        android:text="@string/about"
         android:layout_marginTop="10dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/timelineList"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginHorizontal="6dp"
-        app:layout_constraintTop_toBottomOf="@id/timelineTitle"
-        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

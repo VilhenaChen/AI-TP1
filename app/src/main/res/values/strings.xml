@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">TrabalhoPratico</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="walking">Walking</string>
+    <string name="running">Running</string>
+    <string name="climbing_up_stairs">Climbing up stairs</string>
+    <string name="climbing_down_stairs">Climbing down stairs</string>
+    <string name="choose_activity">Choose Activity</string>
+    <string name="home">Home</string>
+    <string name="timeline">Timeline</string>
+    <string name="about">About</string>
+    <string name="missing_activity_toast">Please choose an activity</string>
 </resources>

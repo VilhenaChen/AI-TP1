@@ -8,38 +8,92 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/activityAnimation"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:lottie_rawRes="@raw/hi_animation"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/informationText"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true" />
+
+    <TextView
+        android:id="@+id/informationText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/subtitle"
+        app:layout_constraintTop_toBottomOf="@id/activityAnimation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/choose_activity"/>
+
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/informationText"
+        app:layout_constraintBottom_toTopOf="@id/buttonContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/subtitle"
+        android:layout_marginTop="10dp"
+        tools:text="00:00"
         android:visibility="gone"/>
 
-    <LinearLayout
-        android:id="@+id/activitySelector"
+    <RadioGroup
+        android:id="@+id/activityChooser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/informationText">
+        <RadioButton
+            android:id="@+id/radioButtonWalking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/walking" />
+        <RadioButton
+            android:id="@+id/radioButtonRunning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/running" />
+        <RadioButton
+            android:id="@+id/radioButtonClimbingUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/climbing_up_stairs" />
+        <RadioButton
+            android:id="@+id/radioButtonClimbingDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/climbing_down_stairs" />
+
+
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="vertical">
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        app:layout_constraintTop_toBottomOf="@id/activityChooser">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/PrimaryButton"
+            android:id="@+id/primaryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Start"/>
+            android:text="@string/start"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/SecondaryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Stop"/>
+            android:text="@string/stop"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
