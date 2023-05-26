@@ -1,19 +1,21 @@
 package pt.vilhena.ai.trabalhopratico.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import pt.vilhena.ai.trabalhopratico.R
 import pt.vilhena.ai.trabalhopratico.databinding.FragmentMainBinding
+import pt.vilhena.ai.trabalhopratico.viewmodel.ActivityViewModel
 
 class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
+    private val viewModel: ActivityViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,7 +23,6 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentMainBinding.inflate(inflater, container, false)
-        // Inflate the layout for this fragment
         return binding.root
     }
 
@@ -35,12 +36,12 @@ class MainFragment : Fragment() {
             if (binding.activityChooser.checkedRadioButtonId == -1) {
                 Toast.makeText(context, R.string.missing_activity_toast, Toast.LENGTH_SHORT).show()
             } else {
-                Log.v("App", binding.activityChooser.checkedRadioButtonId.toString())
-                binding.informationText.text = "Atividade"
-                binding.activityChooser.isVisible = false
-                binding.timer.isVisible = true
-                binding.SecondaryButton.isVisible = true
+                startCapture()
             }
+        }
+
+        binding.secondaryButton.setOnClickListener {
+            stopCapture()
         }
 
         binding.activityChooser.setOnCheckedChangeListener { _, checkedId ->
@@ -52,22 +53,52 @@ class MainFragment : Fragment() {
         binding.activityAnimation.apply {
             when (checkId) {
                 R.id.radioButtonWalking -> {
+                    viewModel.selectedActivity(getString(R.string.walking))
                     setAnimation(R.raw.walking_animation)
                     playAnimation()
                 }
                 R.id.radioButtonRunning -> {
+                    viewModel.selectedActivity(getString(R.string.running))
                     setAnimation(R.raw.running_animation)
                     playAnimation()
                 }
                 R.id.radioButtonClimbingUp -> {
+                    viewModel.selectedActivity(getString(R.string.climbing_up_stairs))
                     setAnimation(R.raw.climbing_up_stairs_animation)
                     playAnimation()
                 }
                 R.id.radioButtonClimbingDown -> {
+                    viewModel.selectedActivity(getString(R.string.climbing_down_stairs))
                     setAnimation(R.raw.climbing_down_stairs_animation)
+                    playAnimation()
+                }
+                else -> {
+                    viewModel.selectedActivity("")
+                    setAnimation(R.raw.hi_animation)
                     playAnimation()
                 }
             }
         }
+    }
+
+    //  Start capture sensor data
+    private fun startCapture() {
+        binding.informationText.text = viewModel.currentActivity.value
+        binding.activityChooser.isVisible = false
+        binding.timer.isVisible = true
+        binding.secondaryButton.isVisible = true
+        viewModel.startCapture()
+    }
+
+    //  Stop capture sensor data
+    private fun stopCapture() {
+        binding.activityChooser.clearCheck()
+
+        binding.informationText.text = getString(R.string.choose_activity)
+        binding.activityChooser.isVisible = true
+        binding.timer.isVisible = false
+        binding.secondaryButton.isVisible = false
+
+        viewModel.stopCapture()
     }
 }

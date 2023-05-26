@@ -12,4 +12,5 @@
     <string name="timeline">Histórico</string>
     <string name="about">Sobre</string>
     <string name="missing_activity_toast">Por favor escolha uma atividade</string>
+    <string name="info_text">Esta aplicação foi desenvolvida no contexto do Trabalho Prático da unidade curricular Ambience Intelligence inserido no Mestrado em Engenharia Informática Área de especialização em Engenharia de Software do Instituto Superior de Engenharia de Coimbra (ISEC).\\nTodos os dados recolhidos pela aplição são anómiimos e apenas serão usados em contexto académico.\\nPara mais informacoes contactar Diogo Vilhena - a21280358@isec.pt</string>
 </resources>
