@@ -9,7 +9,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupWithNavController
@@ -75,17 +74,6 @@ class MainActivity : AppCompatActivity() {
 
         requestPermissions()
 
-//        binding.bottomNavigationBar.setOnItemSelectedListener { item ->
-//            when (item.itemId) {
-//                R.id.home -> replaceFragment(MainFragment())
-//                R.id.timeline -> replaceFragment(TimelineFragment())
-//                else -> {
-//                    Log.v("App", "This should not happen")
-//                    false
-//                }
-//            }
-//        }
-
         val navHostFragment = supportFragmentManager.findFragmentById(binding.fragmentContainer.id) as NavHostFragment
         navController = navHostFragment.navController
         setupWithNavController(binding.bottomNavigationBar, navController)
@@ -99,11 +87,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun replaceFragment(fragment: Fragment): Boolean {
-        supportFragmentManager.beginTransaction().replace(
-            binding.fragmentContainer.id,
-            fragment,
-        ).commit()
-        return true
-    }
+//    private fun replaceFragment(fragment: Fragment): Boolean {
+//        supportFragmentManager.beginTransaction().replace(
+//            binding.fragmentContainer.id,
+//            fragment,
+//        ).commit()
+//        return true
+//    }
 }

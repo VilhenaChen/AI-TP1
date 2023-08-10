@@ -14,88 +14,111 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/informationText"
+        app:layout_constraintBottom_toTopOf="@id/layout"
         app:lottie_autoPlay="true"
         app:lottie_loop="true" />
 
-    <TextView
-        android:id="@+id/informationText"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/subtitle"
+        android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/activityAnimation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/choose_activity"/>
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <TextView
-        android:id="@+id/timer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/informationText"
-        app:layout_constraintBottom_toTopOf="@id/buttonContainer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        style="@style/subtitle"
-        android:layout_marginTop="10dp"
-        tools:text="00:00"
-        android:visibility="gone"/>
-
-    <RadioGroup
-        android:id="@+id/activityChooser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/informationText">
-        <RadioButton
-            android:id="@+id/radioButtonWalking"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/informationText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/walking" />
-        <RadioButton
-            android:id="@+id/radioButtonRunning"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/running" />
-        <RadioButton
-            android:id="@+id/radioButtonClimbingUp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/climbing_up_stairs" />
-        <RadioButton
-            android:id="@+id/radioButtonClimbingDown"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/climbing_down_stairs" />
+            style="@style/subtitle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/choose_activity"/>
 
-
-    </RadioGroup>
-
-    <LinearLayout
-        android:id="@+id/buttonContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/activityChooser">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/primaryButton"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/timer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/start"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/secondaryButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/stop"
+            app:layout_constraintTop_toBottomOf="@id/informationText"
+            app:layout_constraintBottom_toTopOf="@id/buttonContainer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/subtitle"
+            android:layout_marginTop="10dp"
+            tools:text="00:00"
             android:visibility="gone"/>
 
-    </LinearLayout>
+        <RadioGroup
+            android:id="@+id/activityChooser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/informationText">
+            <RadioButton
+                android:id="@+id/radioButtonWalking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/walking" />
+            <RadioButton
+                android:id="@+id/radioButtonRunning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/running" />
+            <RadioButton
+                android:id="@+id/radioButtonClimbingUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/climbing_up_stairs" />
+            <RadioButton
+                android:id="@+id/radioButtonClimbingDown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/climbing_down_stairs" />
+
+
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/buttonContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/activityChooser">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/primaryButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/start"
+                android:layout_marginHorizontal="20dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/secondaryButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/stop"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/sessionId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            style="@style/sessionId"
+            tools:text="ActivityDetectorVilhena"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/buttonContainer"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 

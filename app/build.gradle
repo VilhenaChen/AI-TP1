@@ -26,6 +26,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -47,6 +48,9 @@ dependencies {
     implementation("androidx.navigation:navigation-dynamic-features-fragment:2.5.3")
     implementation 'com.airbnb.android:lottie:3.4.0'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.2")
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.1")
+
     androidTestImplementation("androidx.navigation:navigation-testing:2.5.3")
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

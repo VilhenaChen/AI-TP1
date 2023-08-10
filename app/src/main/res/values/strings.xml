@@ -1,15 +1,15 @@
 <resources>
-    <string name="app_name">TrabalhoPratico</string>
+    <string name="app_name">Activity Monitor Ambience Intelligence</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="walking">Walking</string>
     <string name="running">Running</string>
     <string name="climbing_up_stairs">Climbing up stairs</string>
     <string name="climbing_down_stairs">Climbing down stairs</string>
-    <string name="choose_activity">Choose Activity</string>
+    <string name="choose_activity">Choose an Activity</string>
     <string name="home">Home</string>
     <string name="timeline">Timeline</string>
     <string name="about">About</string>
     <string name="missing_activity_toast">Please choose an activity</string>
-    <string name="info_text">This application was developed in the context of the Practical Assignment of the curricular unit Ambience Intelligence integrated in the MSc in Informatics Engineering Specialization field of Software Engineering of the Instituto Superior de Engenharia de Coimbra (ISEC).\\nAll data collected by the application is anonymous and will only be used in an academic context.\\nFor further information please contact Diogo Vilhena - a21280358@isec.pt</string>
+    <string name="info_text">This application was developed in the context of the Practical Assignment of the curricular unit Ambience Intelligence integrated in the MSc in Informatics Engineering Specialization field of Software Engineering of the Instituto Superior de Engenharia de Coimbra (ISEC).\nAll data collected by the application is anonymous and will only be used in an academic context.\nFor further information please contact Diogo Vilhena - a21280358@isec.pt</string>
 </resources>

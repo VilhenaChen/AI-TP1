@@ -10,18 +10,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import pt.vilhena.ai.trabalhopratico.R
 import pt.vilhena.ai.trabalhopratico.databinding.FragmentMainBinding
-import pt.vilhena.ai.trabalhopratico.viewmodel.ActivityViewModel
+import pt.vilhena.ai.trabalhopratico.viewmodel.SharedViewModel
 
 class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
-    private val viewModel: ActivityViewModel by activityViewModels()
+    private val viewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -49,31 +49,32 @@ class MainFragment : Fragment() {
         }
     }
 
+    // TODO Refactor This
     private fun changeAnimation(checkId: Int) {
         binding.activityAnimation.apply {
             when (checkId) {
                 R.id.radioButtonWalking -> {
-                    viewModel.selectedActivity(getString(R.string.walking))
+                    viewModel.changeSelectedActivity(getString(R.string.walking))
                     setAnimation(R.raw.walking_animation)
                     playAnimation()
                 }
                 R.id.radioButtonRunning -> {
-                    viewModel.selectedActivity(getString(R.string.running))
+                    viewModel.changeSelectedActivity(getString(R.string.running))
                     setAnimation(R.raw.running_animation)
                     playAnimation()
                 }
                 R.id.radioButtonClimbingUp -> {
-                    viewModel.selectedActivity(getString(R.string.climbing_up_stairs))
+                    viewModel.changeSelectedActivity(getString(R.string.climbing_up_stairs))
                     setAnimation(R.raw.climbing_up_stairs_animation)
                     playAnimation()
                 }
                 R.id.radioButtonClimbingDown -> {
-                    viewModel.selectedActivity(getString(R.string.climbing_down_stairs))
+                    viewModel.changeSelectedActivity(getString(R.string.climbing_down_stairs))
                     setAnimation(R.raw.climbing_down_stairs_animation)
                     playAnimation()
                 }
                 else -> {
-                    viewModel.selectedActivity("")
+                    viewModel.changeSelectedActivity("")
                     setAnimation(R.raw.hi_animation)
                     playAnimation()
                 }
@@ -88,6 +89,10 @@ class MainFragment : Fragment() {
         binding.timer.isVisible = true
         binding.secondaryButton.isVisible = true
         viewModel.startCapture()
+        binding.sessionId.apply {
+            isVisible = true
+            text = viewModel.sessionID
+        }
     }
 
     //  Stop capture sensor data
@@ -98,6 +103,10 @@ class MainFragment : Fragment() {
         binding.activityChooser.isVisible = true
         binding.timer.isVisible = false
         binding.secondaryButton.isVisible = false
+        binding.sessionId.apply {
+            isVisible = false
+            text = ""
+        }
 
         viewModel.stopCapture()
     }
