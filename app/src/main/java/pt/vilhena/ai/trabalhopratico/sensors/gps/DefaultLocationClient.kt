@@ -20,7 +20,7 @@ class DefaultLocationClient(
 ) : LocationClient {
 
     @SuppressLint("MissingPermission")
-    override fun getLocationUpdates(): Flow<Location> {
+    override fun getLocationUpdates(interval: Long): Flow<Location> {
         return callbackFlow {
             // TODO: Check if the location permssion is active
 
@@ -33,7 +33,7 @@ class DefaultLocationClient(
                 throw LocationClient.LocationException("GPS IS NOT ACTIVE")
             }
 
-            val request = LocationRequest.create().setInterval(2000)
+            val request = LocationRequest.create().setInterval(interval)
 
             val locationCallback = object : LocationCallback() {
                 override fun onLocationResult(result: LocationResult) {

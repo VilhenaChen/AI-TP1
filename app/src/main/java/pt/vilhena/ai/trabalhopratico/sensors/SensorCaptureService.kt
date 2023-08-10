@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import pt.vilhena.ai.trabalhopratico.data.common.Constants.GPS_INTERVAL
 import pt.vilhena.ai.trabalhopratico.sensors.gps.DefaultLocationClient
 import pt.vilhena.ai.trabalhopratico.sensors.gps.LocationClient
 
@@ -44,7 +45,7 @@ class SensorCaptureService(private val context: Context) : SensorEventListener {
     @SuppressLint("MissingPermission")
     fun startGpsLocation() {
         locationClient = DefaultLocationClient(context, LocationServices.getFusedLocationProviderClient(context))
-        locationClient.getLocationUpdates()
+        locationClient.getLocationUpdates(GPS_INTERVAL)
             .catch { e -> e.printStackTrace() }
             .onEach { location ->
                 val lat = location.latitude
