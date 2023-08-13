@@ -6,7 +6,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import androidx.lifecycle.MutableLiveData
+import android.location.Location
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,49 +21,67 @@ class SensorCaptureService(private val context: Context) : SensorEventListener {
     private lateinit var sensorManager: SensorManager
 
     private lateinit var locationClient: LocationClient
-    val accelerometerLiveData = MutableLiveData<FloatArray>()
 
-    val gyroscopeLiveData = MutableLiveData<FloatArray>()
+    //  Variables for record sensor data
+    var accelerometerData = floatArrayOf(0f)
+    var gyroscopeData = floatArrayOf(0f)
+    var magneticFieldData = floatArrayOf(0f)
 
-    var location: String = "null"
+    var location = Location("")
 
-    //  Register Sensor for Capturing
-    fun registerSensors() {
+    /*
+       Register Sensor for Capturing
+       *SensorManager.SENSOR_DELAY_FASTEST* means that the system will try to get the sensor Data ASAP
+    */
+    fun registerSensorsListeners() {
         sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
         //  Registering Listeners for each sensor
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_NORMAL)
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_FASTEST)
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST)
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_FASTEST)
 
         startGpsLocation()
     }
 
-    fun unregisterSensors() {
+    fun unregisterSensorsListeners() {
         sensorManager.unregisterListener(this)
     }
 
+    /*
+        Start getting GPS data (Latitude Longitude Altitude Accuracy Bearing) every GPS_INTERVAL
+        This will stop when the coroutine stops
+     */
     @SuppressLint("MissingPermission")
-    fun startGpsLocation() {
+    private fun startGpsLocation() {
         locationClient = DefaultLocationClient(context, LocationServices.getFusedLocationProviderClient(context))
         locationClient.getLocationUpdates(GPS_INTERVAL)
             .catch { e -> e.printStackTrace() }
             .onEach { location ->
                 val lat = location.latitude
                 val long = location.longitude
-                this.location = "$lat, $long"
+                val alt = location.altitude
+                val accuracy = location.accuracy
+                val bearing = location.bearing
+                val timestamp = location.time
+                this.location = location
             }.launchIn(CoroutineScope(Dispatchers.IO))
     }
 
-    //  OnSensorChange reads the values from the corresponding sensor
+    //  OnSensorChange reads the values from the corresponding sensor everytime there is a change
     override fun onSensorChanged(event: SensorEvent?) {
         when (event?.sensor?.type) {
             Sensor.TYPE_ACCELEROMETER -> {
-                // Log.v(TAG, "Acelerometer ${event.values[2]}")
-                accelerometerLiveData.value = event.values
+                // Log.v(TAG, "Accelerometer ${event.values[2]}")
+                accelerometerData = event.values
             }
             Sensor.TYPE_GYROSCOPE -> {
                 // Log.v(TAG, "Gyroscope ${event.values[2]}")
-                gyroscopeLiveData.value = event.values
+                gyroscopeData = event.values
+            }
+            Sensor.TYPE_MAGNETIC_FIELD -> {
+                // Log.v(TAG, "Magnetic Field ${event.values[2]}")
+                magneticFieldData = event.values
             }
         }
     }

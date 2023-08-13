@@ -44,6 +44,7 @@ class DefaultLocationClient(
 
             client.requestLocationUpdates(request, locationCallback, Looper.getMainLooper())
 
+            //  When the coroutine gets closed we remove the LocationUpdates
             awaitClose {
                 client.removeLocationUpdates(locationCallback)
             }

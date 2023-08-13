@@ -1,6 +1,7 @@
 package pt.vilhena.ai.trabalhopratico.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -9,7 +10,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import pt.vilhena.ai.trabalhopratico.data.common.Constants.CAPTURE_REFRESH_RATE
+import pt.vilhena.ai.trabalhopratico.data.common.Constants.SENSOR_CAPTURE_REFRESH_RATE
+import pt.vilhena.ai.trabalhopratico.data.common.Constants.TAG
 import pt.vilhena.ai.trabalhopratico.sensors.SensorCaptureService
 import java.time.LocalDateTime
 import java.util.Calendar
@@ -35,10 +37,10 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     //  Start Capturing sensor data
     fun startCapture() {
         createSessionID()
-        sensorCaptureService.registerSensors()
+        sensorCaptureService.registerSensorsListeners()
         sensorRecordingJob = viewModelScope.launch {
             recordSensorData().collect {
-                // Log.d(TAG, it)
+                Log.d(TAG, it)
             }
         }
     }
@@ -47,10 +49,14 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     private fun recordSensorData(): Flow<String> = flow {
         while (true) {
             val timeElapsed = measureTimeMillis {
-                emit(sensorCaptureService.location)
+                val ace = sensorCaptureService.accelerometerData[0]
+                val gyro = sensorCaptureService.gyroscopeData[0]
+                val mag = sensorCaptureService.magneticFieldData[0]
+                val loc = sensorCaptureService.location.latitude
+                emit("ace: $ace gyro: $gyro mag: $mag loc: $loc")
             }
 
-            val delayTime = CAPTURE_REFRESH_RATE - timeElapsed
+            val delayTime = SENSOR_CAPTURE_REFRESH_RATE - timeElapsed
             if (delayTime > 0) {
                 delay(delayTime)
             }
@@ -60,7 +66,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     //  Stop capture sensor data
     fun stopCapture() {
         sessionID = ""
-        sensorCaptureService.unregisterSensors()
+        sensorCaptureService.unregisterSensorsListeners()
         sensorRecordingJob?.cancel()
     }
 
@@ -81,6 +87,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     //  File Section
+
     //  Write on the CSV file the data
     private fun writeFile() {
     }
