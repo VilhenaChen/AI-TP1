@@ -23,23 +23,22 @@ class SensorCaptureService(private val context: Context) : SensorEventListener {
     private lateinit var locationClient: LocationClient
 
     //  Variables for record sensor data
-    var accelerometerData = floatArrayOf(0f)
-    var gyroscopeData = floatArrayOf(0f)
-    var magneticFieldData = floatArrayOf(0f)
+    var accelerometerData = floatArrayOf(0f, 0f, 0f)
+    var gyroscopeData = floatArrayOf(0f, 0f, 0f)
+    var magneticFieldData = floatArrayOf(0f, 0f, 0f)
 
     var location = Location("")
 
     /*
        Register Sensor for Capturing
-       *SensorManager.SENSOR_DELAY_FASTEST* means that the system will try to get the sensor Data ASAP
     */
     fun registerSensorsListeners() {
         sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
         //  Registering Listeners for each sensor
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_FASTEST)
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST)
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_FASTEST)
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL)
 
         startGpsLocation()
     }
@@ -58,12 +57,6 @@ class SensorCaptureService(private val context: Context) : SensorEventListener {
         locationClient.getLocationUpdates(GPS_INTERVAL)
             .catch { e -> e.printStackTrace() }
             .onEach { location ->
-                val lat = location.latitude
-                val long = location.longitude
-                val alt = location.altitude
-                val accuracy = location.accuracy
-                val bearing = location.bearing
-                val timestamp = location.time
                 this.location = location
             }.launchIn(CoroutineScope(Dispatchers.IO))
     }

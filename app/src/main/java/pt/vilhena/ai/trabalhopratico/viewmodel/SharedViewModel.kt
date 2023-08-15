@@ -1,18 +1,22 @@
 package pt.vilhena.ai.trabalhopratico.viewmodel
 
 import android.app.Application
+import android.os.Environment
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import pt.vilhena.ai.trabalhopratico.data.common.Constants.CSV_HEADER
 import pt.vilhena.ai.trabalhopratico.data.common.Constants.SENSOR_CAPTURE_REFRESH_RATE
 import pt.vilhena.ai.trabalhopratico.data.common.Constants.TAG
 import pt.vilhena.ai.trabalhopratico.sensors.SensorCaptureService
+import java.io.File
 import java.time.LocalDateTime
 import java.util.Calendar
 import java.util.UUID
@@ -29,6 +33,13 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     private val calendar = Calendar.getInstance()
     private lateinit var startDate: LocalDateTime
+
+    //  This is the documents folder path, to where the app will write the CSVs
+    private val path =
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+
+    private lateinit var dataFile: File
+    private var rows = ArrayList<String>()
 
     fun changeSelectedActivity(activity: String) {
         _currentActivity.value = activity
@@ -49,11 +60,22 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     private fun recordSensorData(): Flow<String> = flow {
         while (true) {
             val timeElapsed = measureTimeMillis {
-                val ace = sensorCaptureService.accelerometerData[0]
-                val gyro = sensorCaptureService.gyroscopeData[0]
-                val mag = sensorCaptureService.magneticFieldData[0]
-                val loc = sensorCaptureService.location.latitude
-                emit("ace: $ace gyro: $gyro mag: $mag loc: $loc")
+                val lat = sensorCaptureService.location.latitude
+                val long = sensorCaptureService.location.longitude
+                val altitude = sensorCaptureService.location.altitude
+                val accuracy = sensorCaptureService.location.accuracy
+                val bearing = sensorCaptureService.location.bearing
+                val timestamp = sensorCaptureService.location.time
+                val x_acc = sensorCaptureService.accelerometerData[0].toString()
+                val y_acc = sensorCaptureService.accelerometerData[1].toString()
+                val z_acc = sensorCaptureService.accelerometerData[2].toString()
+                val x_gyro = sensorCaptureService.gyroscopeData[0].toString()
+                val y_gyro = sensorCaptureService.gyroscopeData[1].toString()
+                val z_gyro = sensorCaptureService.gyroscopeData[2].toString()
+                val x_mag = sensorCaptureService.magneticFieldData[0].toString()
+                val y_mag = sensorCaptureService.magneticFieldData[0].toString()
+                val z_mag = sensorCaptureService.magneticFieldData[0].toString()
+                rows.add("$sessionID,$lat,$long,$altitude,$accuracy,$bearing,$timestamp,$x_acc,$y_acc,$z_acc,$x_gyro,$y_gyro,$z_gyro,$x_mag,$y_mag,$z_mag,${currentActivity.value}")
             }
 
             val delayTime = SENSOR_CAPTURE_REFRESH_RATE - timeElapsed
@@ -65,6 +87,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     //  Stop capture sensor data
     fun stopCapture() {
+        writeFile()
         sessionID = ""
         sensorCaptureService.unregisterSensorsListeners()
         sensorRecordingJob?.cancel()
@@ -87,7 +110,24 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     //  File Section
 
-    //  Write on the CSV file the data
+    /*  Write on the CSV file the data
+        The First line is being remove since the sensors are still being started
+     */
     private fun writeFile() {
+        rows.add(0, CSV_HEADER)
+        rows.removeAt(1)
+        val rowsList = rows.map { listOf(it) }
+        val fileName = "${sessionID}_${currentActivity.value}.csv"
+        dataFile = File(path, fileName)
+        csvWriter().writeAll(rowsList, dataFile)
+    }
+
+    //  Delete CSV file when uploads ends
+    private fun deleteFile() {
+        if (dataFile.exists()) {
+            dataFile.delete()
+        } else {
+            Log.d(TAG, "File ${dataFile.name} does not exist")
+        }
     }
 }

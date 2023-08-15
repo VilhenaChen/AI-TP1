@@ -97,6 +97,7 @@ class MainFragment : Fragment() {
 
     //  Stop capture sensor data
     private fun stopCapture() {
+        viewModel.stopCapture()
         binding.activityChooser.clearCheck()
 
         binding.informationText.text = getString(R.string.choose_activity)
@@ -107,7 +108,5 @@ class MainFragment : Fragment() {
             isVisible = false
             text = ""
         }
-
-        viewModel.stopCapture()
     }
 }
