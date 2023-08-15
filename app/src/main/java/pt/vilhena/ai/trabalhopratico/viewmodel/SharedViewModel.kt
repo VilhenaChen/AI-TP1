@@ -81,8 +81,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
             calendar.get(Calendar.SECOND),
         )
 
-        sessionID =
-            "ActivityDetectorISEC" + "_" + startDate.toString() + "_" + UUID.randomUUID().toString().takeLast(3)
+        sessionID = startDate.toString() + "_" + UUID.randomUUID().toString().takeLast(3)
         sessionID = sessionID.replace("([T,:-])".toRegex(), "")
     }
 
