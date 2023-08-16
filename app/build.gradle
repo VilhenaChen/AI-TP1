@@ -15,11 +15,18 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
+        buildConfigField "String", "SERVER_HOSTNAME", "\"${properties.getProperty("SERVER_HOSTNAME")}\""
+        buildConfigField "String", "SERVER_USERNAME", "\"${properties.getProperty("SERVER_USERNAME")}\""
+        buildConfigField "String", "SERVER_PASSWORD", "\"${properties.getProperty("SERVER_PASSWORD")}\""
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -50,6 +57,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:19.0.1'
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.2")
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.2")
+    implementation "com.jcraft:jsch:0.1.55"
 
     androidTestImplementation("androidx.navigation:navigation-testing:2.5.3")
     testImplementation 'junit:junit:4.13.2'

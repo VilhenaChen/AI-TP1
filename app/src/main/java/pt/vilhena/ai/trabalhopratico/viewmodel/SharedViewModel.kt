@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 import pt.vilhena.ai.trabalhopratico.data.common.Constants.CSV_HEADER
 import pt.vilhena.ai.trabalhopratico.data.common.Constants.SENSOR_CAPTURE_REFRESH_RATE
 import pt.vilhena.ai.trabalhopratico.data.common.Constants.TAG
+import pt.vilhena.ai.trabalhopratico.data.sftp.SftpService
 import pt.vilhena.ai.trabalhopratico.sensors.SensorCaptureService
 import java.io.File
 import java.time.LocalDateTime
@@ -40,6 +42,8 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     private lateinit var dataFile: File
     private var rows = ArrayList<String>()
+
+    private val sftpService = SftpService()
 
     fun changeSelectedActivity(activity: String) {
         _currentActivity.value = activity
@@ -91,6 +95,9 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         sessionID = ""
         sensorCaptureService.unregisterSensorsListeners()
         sensorRecordingJob?.cancel()
+        viewModelScope.launch(Dispatchers.IO) {
+            sftpService.copyFileToSftp(dataFile)
+        }
     }
 
     //  Create SessionID based on date, time and a random 3 characters
@@ -118,6 +125,9 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         rows.removeAt(1)
         val rowsList = rows.map { listOf(it) }
         val fileName = "${sessionID}_${currentActivity.value}.csv"
+        if (!path.exists()) {
+            path.mkdir()
+        }
         dataFile = File(path, fileName)
         csvWriter().writeAll(rowsList, dataFile)
     }
