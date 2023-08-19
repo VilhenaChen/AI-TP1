@@ -95,6 +95,7 @@
                 android:id="@+id/primaryButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/primaryButton"
                 android:text="@string/start"
                 android:layout_marginHorizontal="20dp"/>
 
@@ -102,6 +103,7 @@
                 android:id="@+id/secondaryButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/secondaryButton"
                 android:text="@string/stop"
                 android:visibility="gone"/>
 

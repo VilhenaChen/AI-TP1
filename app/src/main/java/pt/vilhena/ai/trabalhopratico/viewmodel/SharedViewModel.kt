@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -32,6 +33,9 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     private lateinit var startDate: LocalDateTime
 
     private lateinit var fileUtils: FileUtils
+
+    private val _fileSentFlag = MutableLiveData<Boolean>()
+    val fileSentFlag = _fileSentFlag
 
     fun changeSelectedActivity(activity: String) {
         _currentActivity.value = activity
@@ -88,7 +92,9 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         sessionID = ""
         sensorCaptureService.unregisterSensorsListeners()
         sensorRecordingJob?.cancel()
-        viewModelScope.launch { fileUtils.writeFile() }.invokeOnCompletion { fileUtils.deleteLocalFile() }
+        viewModelScope.launch(Dispatchers.IO) {
+            _fileSentFlag.postValue(fileUtils.writeFile())
+        }.invokeOnCompletion { fileUtils.deleteLocalFile() }
     }
 
     //  Create SessionID based on date, time and a random 3 characters

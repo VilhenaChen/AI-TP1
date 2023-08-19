@@ -15,4 +15,12 @@
         <item name="alpha">0.5</item>
     </style>
 
+    <style name="primaryButton">
+        <item name="android:backgroundTint">@color/caribe_blue</item>
+    </style>
+
+    <style name="secondaryButton">
+        <item name="android:backgroundTint">@color/rosy_brown</item>
+    </style>
+
 </resources>

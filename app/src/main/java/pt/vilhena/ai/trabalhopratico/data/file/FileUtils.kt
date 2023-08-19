@@ -70,13 +70,13 @@ class FileUtils {
     /*  Write on the CSV file the data
         The First line is being remove since the sensors are still being started
      */
-    suspend fun writeFile() {
+    suspend fun writeFile(): Boolean {
         if (!path.exists()) {
             path.mkdir()
         }
         dataFile = File(path, fileName)
         csvWriter().writeAll(fileModel.getLines(), dataFile)
-        sftpService.copyFileToSftp(dataFile)
+        return sftpService.copyFileToSftp(dataFile)
     }
 
     //  Delete CSV file when uploads ends

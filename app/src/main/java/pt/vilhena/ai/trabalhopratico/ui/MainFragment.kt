@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import pt.vilhena.ai.trabalhopratico.R
 import pt.vilhena.ai.trabalhopratico.databinding.FragmentMainBinding
 import pt.vilhena.ai.trabalhopratico.viewmodel.SharedViewModel
@@ -47,6 +48,9 @@ class MainFragment : Fragment() {
         binding.activityChooser.setOnCheckedChangeListener { _, checkedId ->
             changeAnimation(checkedId)
         }
+        viewModel.fileSentFlag.observe(viewLifecycleOwner, Observer {
+          fileToastMaker(it)
+        })
     }
 
     // TODO Refactor This
@@ -107,6 +111,14 @@ class MainFragment : Fragment() {
         binding.sessionId.apply {
             isVisible = false
             text = ""
+        }
+    }
+
+    private fun fileToastMaker(wasFileSent: Boolean) {
+        if (wasFileSent) {
+            Toast.makeText(context, R.string.file_sent_success, Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, R.string.file_sent_error, Toast.LENGTH_SHORT).show()
         }
     }
 }
