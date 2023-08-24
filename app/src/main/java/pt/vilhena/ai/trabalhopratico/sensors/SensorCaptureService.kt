@@ -27,6 +27,8 @@ class SensorCaptureService(private val context: Context) : SensorEventListener {
     var gyroscopeData = floatArrayOf(0f, 0f, 0f)
     var magneticFieldData = floatArrayOf(0f, 0f, 0f)
 
+    private var gravity = floatArrayOf(0f, 0f, 0f)
+
     var location = Location("")
 
     /*
@@ -65,19 +67,30 @@ class SensorCaptureService(private val context: Context) : SensorEventListener {
     override fun onSensorChanged(event: SensorEvent?) {
         when (event?.sensor?.type) {
             Sensor.TYPE_ACCELEROMETER -> {
-                // Log.v(TAG, "Accelerometer ${event.values[2]}")
-                accelerometerData = event.values
+                calculateLinearAcceleration(event.values)
             }
             Sensor.TYPE_GYROSCOPE -> {
-                // Log.v(TAG, "Gyroscope ${event.values[2]}")
                 gyroscopeData = event.values
             }
             Sensor.TYPE_MAGNETIC_FIELD -> {
-                // Log.v(TAG, "Magnetic Field ${event.values[2]}")
                 magneticFieldData = event.values
             }
         }
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+
+    private fun calculateLinearAcceleration(accelerometerRawData: FloatArray) {
+        val alpha = 0.8f
+
+        // Isolate the force of gravity with the low-pass filter.
+        gravity[0] = alpha * gravity[0] + (1 - alpha) * accelerometerRawData[0]
+        gravity[1] = alpha * gravity[1] + (1 - alpha) * accelerometerRawData[1]
+        gravity[2] = alpha * gravity[2] + (1 - alpha) * accelerometerRawData[2]
+
+        // Remove the gravity contribution with the high-pass filter.
+        accelerometerData[0] = accelerometerRawData[0] - gravity[0]
+        accelerometerData[1] = accelerometerRawData[1] - gravity[1]
+        accelerometerData[2] = accelerometerRawData[2] - gravity[2]
+    }
 }

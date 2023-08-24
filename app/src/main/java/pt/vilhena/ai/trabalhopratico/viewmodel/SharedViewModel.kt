@@ -23,8 +23,10 @@ import kotlin.system.measureTimeMillis
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
 
     private var sensorRecordingJob: Job? = null
+    private var timerJob: Job? = null
     private val _currentActivity = MutableLiveData<String>()
     val currentActivity = _currentActivity
+    val elapsedTime = MutableLiveData<String>()
 
     lateinit var sessionID: String
     private var sensorCaptureService = SensorCaptureService(getApplication())
@@ -37,7 +39,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     private val _fileSentFlag = MutableLiveData<Boolean>()
     val fileSentFlag = _fileSentFlag
 
-    fun changeSelectedActivity(activity: String) {
+    fun setSelectedActivity(activity: String) {
         _currentActivity.value = activity
     }
 
@@ -49,6 +51,12 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         sensorRecordingJob = viewModelScope.launch {
             recordSensorData().collect {
                 Log.d(TAG, it)
+            }
+        }
+        timerJob = viewModelScope.launch {
+            startTimer().collect() {
+                Log.d(TAG, formatTime(it))
+                elapsedTime.value = formatTime(it)
             }
         }
     }
@@ -92,6 +100,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         sessionID = ""
         sensorCaptureService.unregisterSensorsListeners()
         sensorRecordingJob?.cancel()
+        timerJob?.cancel()
         viewModelScope.launch(Dispatchers.IO) {
             _fileSentFlag.postValue(fileUtils.writeFile())
         }.invokeOnCompletion { fileUtils.deleteLocalFile() }
@@ -111,5 +120,20 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         sessionID = startDate.toString() + "_" + UUID.randomUUID().toString().takeLast(3)
         sessionID = sessionID.replace("([T,:-])".toRegex(), "")
         currentActivity.value?.let { fileUtils.createFileModel(sessionID, it) }
+    }
+
+    private fun startTimer(): Flow<Int> = flow {
+        var secondsElapsed = 0
+        while (true) {
+            emit(secondsElapsed)
+            delay(1000)
+            secondsElapsed++
+        }
+    }
+
+    private fun formatTime(seconds: Int): String {
+        val minutes = seconds / 60
+        val remainingSeconds = seconds % 60
+        return String.format("%02d:%02d", minutes, remainingSeconds)
     }
 }

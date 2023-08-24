@@ -15,8 +15,9 @@ class SftpService {
     private val port = 22
     private val path = "/home/amistudent/data/profile1/265"
 
+    //  Receives a file to send to the SFTP Server
     suspend fun copyFileToSftp(file: File): Boolean {
-        var jschSession: Session? = null
+        var jschSession: Session?
         try {
             val jsch = JSch()
             jschSession = jsch.getSession(username, hostname, port)

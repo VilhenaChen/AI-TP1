@@ -8,8 +8,8 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import pt.vilhena.ai.trabalhopratico.R
+import pt.vilhena.ai.trabalhopratico.data.common.Activities
 import pt.vilhena.ai.trabalhopratico.databinding.FragmentMainBinding
 import pt.vilhena.ai.trabalhopratico.viewmodel.SharedViewModel
 
@@ -48,9 +48,17 @@ class MainFragment : Fragment() {
         binding.activityChooser.setOnCheckedChangeListener { _, checkedId ->
             changeAnimation(checkedId)
         }
-        viewModel.fileSentFlag.observe(viewLifecycleOwner, Observer {
-          fileToastMaker(it)
-        })
+        viewModel.fileSentFlag.observe(
+            viewLifecycleOwner,
+        ) {
+            fileToastMaker(it)
+        }
+
+        viewModel.elapsedTime.observe(
+            viewLifecycleOwner,
+        ) {
+            binding.timer.text = it
+        }
     }
 
     // TODO Refactor This
@@ -58,27 +66,27 @@ class MainFragment : Fragment() {
         binding.activityAnimation.apply {
             when (checkId) {
                 R.id.radioButtonWalking -> {
-                    viewModel.changeSelectedActivity(getString(R.string.walking))
-                    setAnimation(R.raw.walking_animation)
+                    viewModel.setSelectedActivity(Activities.WALKING.activity)
+                    setAnimation(Activities.WALKING.animationResource)
                     playAnimation()
                 }
                 R.id.radioButtonRunning -> {
-                    viewModel.changeSelectedActivity(getString(R.string.running))
-                    setAnimation(R.raw.running_animation)
+                    viewModel.setSelectedActivity(Activities.RUNNING.activity)
+                    setAnimation(Activities.RUNNING.animationResource)
                     playAnimation()
                 }
                 R.id.radioButtonClimbingUp -> {
-                    viewModel.changeSelectedActivity(getString(R.string.climbing_up_stairs))
-                    setAnimation(R.raw.climbing_up_stairs_animation)
+                    viewModel.setSelectedActivity(Activities.CLIMBING_UP_STAIRS.activity)
+                    setAnimation(Activities.CLIMBING_UP_STAIRS.animationResource)
                     playAnimation()
                 }
                 R.id.radioButtonClimbingDown -> {
-                    viewModel.changeSelectedActivity(getString(R.string.climbing_down_stairs))
-                    setAnimation(R.raw.climbing_down_stairs_animation)
+                    viewModel.setSelectedActivity(Activities.CLIMBING_DOWN_STAIRS.activity)
+                    setAnimation(Activities.CLIMBING_DOWN_STAIRS.animationResource)
                     playAnimation()
                 }
                 else -> {
-                    viewModel.changeSelectedActivity("")
+                    viewModel.setSelectedActivity("")
                     setAnimation(R.raw.hi_animation)
                     playAnimation()
                 }
@@ -91,6 +99,7 @@ class MainFragment : Fragment() {
         binding.informationText.text = viewModel.currentActivity.value
         binding.activityChooser.isVisible = false
         binding.timer.isVisible = true
+        binding.primaryButton.isVisible = false
         binding.secondaryButton.isVisible = true
         viewModel.startCapture()
         binding.sessionId.apply {
@@ -107,6 +116,7 @@ class MainFragment : Fragment() {
         binding.informationText.text = getString(R.string.choose_activity)
         binding.activityChooser.isVisible = true
         binding.timer.isVisible = false
+        binding.primaryButton.isVisible = true
         binding.secondaryButton.isVisible = false
         binding.sessionId.apply {
             isVisible = false
