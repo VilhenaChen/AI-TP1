@@ -89,12 +89,4 @@ class MainActivity : AppCompatActivity() {
             if (!isGranted) requestPermissionLauncher.launch(arrayOf(permission))
         }
     }
-
-//    private fun replaceFragment(fragment: Fragment): Boolean {
-//        supportFragmentManager.beginTransaction().replace(
-//            binding.fragmentContainer.id,
-//            fragment,
-//        ).commit()
-//        return true
-//    }
 }

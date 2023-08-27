@@ -1,7 +1,6 @@
 package pt.vilhena.ai.trabalhopratico.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -12,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import pt.vilhena.ai.trabalhopratico.data.common.Constants.SENSOR_CAPTURE_REFRESH_RATE
-import pt.vilhena.ai.trabalhopratico.data.common.Constants.TAG
 import pt.vilhena.ai.trabalhopratico.data.file.FileUtils
 import pt.vilhena.ai.trabalhopratico.sensors.SensorCaptureService
 import java.time.LocalDateTime
@@ -22,6 +20,7 @@ import kotlin.system.measureTimeMillis
 
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
 
+    var activityStarted = false
     private var sensorRecordingJob: Job? = null
     private var timerJob: Job? = null
     private val _currentActivity = MutableLiveData<String>()
@@ -45,17 +44,15 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     //  Start Capturing sensor data
     fun startCapture() {
+        activityStarted = true
         fileUtils = FileUtils()
         createSessionID()
         sensorCaptureService.registerSensorsListeners()
         sensorRecordingJob = viewModelScope.launch {
-            recordSensorData().collect {
-                Log.d(TAG, it)
-            }
+            recordSensorData().collect {}
         }
         timerJob = viewModelScope.launch {
             startTimer().collect() {
-                Log.d(TAG, formatTime(it))
                 elapsedTime.value = formatTime(it)
             }
         }
@@ -97,6 +94,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     //  Stop capture sensor data
     fun stopCapture() {
+        activityStarted = false
         sessionID = ""
         sensorCaptureService.unregisterSensorsListeners()
         sensorRecordingJob?.cancel()
@@ -117,7 +115,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
             calendar.get(Calendar.SECOND),
         )
 
-        sessionID = startDate.toString() + "_" + UUID.randomUUID().toString().takeLast(3)
+        sessionID = startDate.toString() + UUID.randomUUID().toString().takeLast(3)
         sessionID = sessionID.replace("([T,:-])".toRegex(), "")
         currentActivity.value?.let { fileUtils.createFileModel(sessionID, it) }
     }
