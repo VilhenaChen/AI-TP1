@@ -11,8 +11,8 @@ android {
         applicationId "pt.vilhena.ai.trabalhopratico"
         minSdk 24
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 27082023
+        versionName "1.0-manualCapture"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
