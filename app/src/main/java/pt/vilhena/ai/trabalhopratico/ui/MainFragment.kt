@@ -29,12 +29,12 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupObservers()
         if (viewModel.activityStarted) {
             startCapture()
         } else {
             setupUI()
         }
-        setupObservers()
     }
 
     private fun setupUI() {

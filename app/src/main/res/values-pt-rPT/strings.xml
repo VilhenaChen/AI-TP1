@@ -12,7 +12,7 @@
     <string name="timeline">Histórico</string>
     <string name="about">Sobre</string>
     <string name="missing_activity_toast">Por favor escolha uma atividade</string>
-    <string name="info_text">Esta aplicação foi desenvolvida no contexto do Trabalho Prático da unidade curricular Ambience Intelligence inserido no Mestrado em Engenharia Informática Área de especialização em Engenharia de Software do Instituto Superior de Engenharia de Coimbra (ISEC).\n\nTodos os dados recolhidos pela aplição são anónimos e apenas serão usados em contexto académico.\n\nTodas as animações foram descarregadas de: https://lottiefiles.com/pt/ \n\n Para o Icone da App foi usado um mix de icones de: https://www.flaticon.com \n\nPara mais informacoes contactar Diogo Vilhena - a21280358@isec.pt</string>
+    <string name="info_text">Esta aplicação foi desenvolvida no contexto do Trabalho Prático da unidade curricular Ambience Intelligence inserido no Mestrado em Engenharia Informática Área de especialização em Engenharia de Software do Instituto Superior de Engenharia de Coimbra (ISEC).\n\nTodos os dados recolhidos pela aplição são anónimos e apenas serão usados em contexto académico. Caso a Aplicação não consiga enviar o ficheiro para o servidor, o ficheiro fica guardado na pasta de Documentos do telemóvel\n\nTodas as animações foram descarregadas de: https://lottiefiles.com/pt/ \n\n Para o Icone da App foi usado um mix de icones de: https://www.flaticon.com \n\nPara mais informacoes contactar Diogo Vilhena - a21280358@isec.pt</string>
     <string name="file_sent_success">A Atividade foi enviada com sucesso</string>
-    <string name="file_sent_error">Não foi possível enviar a atividade</string>
+    <string name="file_sent_error">Não foi possível enviar a atividade, guardada nos Documentos</string>
 </resources>

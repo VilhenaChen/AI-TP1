@@ -1,10 +1,12 @@
 package pt.vilhena.ai.trabalhopratico.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -25,7 +27,8 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     private var timerJob: Job? = null
     private val _currentActivity = MutableLiveData<String>()
     val currentActivity = _currentActivity
-    val elapsedTime = MutableLiveData<String>()
+    private val _elapsedTime = MutableLiveData<String>()
+    val elapsedTime = _elapsedTime
 
     lateinit var sessionID: String
     private var sensorCaptureService = SensorCaptureService(getApplication())
@@ -48,12 +51,12 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         fileUtils = FileUtils()
         createSessionID()
         sensorCaptureService.registerSensorsListeners()
-        sensorRecordingJob = viewModelScope.launch {
-            recordSensorData().collect {}
+        sensorRecordingJob = GlobalScope.launch(Dispatchers.IO) {
+            recordSensorData().collect { }
         }
-        timerJob = viewModelScope.launch {
+        timerJob = GlobalScope.launch {
             startTimer().collect() {
-                elapsedTime.value = formatTime(it)
+                _elapsedTime.postValue(formatTime(it))
             }
         }
     }
@@ -83,6 +86,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
                         it,
                     )
                 }
+                Log.d("FF", "TESTE")
             }
 
             val delayTime = SENSOR_CAPTURE_REFRESH_RATE - timeElapsed
@@ -101,7 +105,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         timerJob?.cancel()
         viewModelScope.launch(Dispatchers.IO) {
             _fileSentFlag.postValue(fileUtils.writeFile())
-        }.invokeOnCompletion { fileUtils.deleteLocalFile() }
+        }.invokeOnCompletion { if (fileSentFlag.value == true) fileUtils.deleteLocalFile() }
     }
 
     //  Create SessionID based on date, time and a random 3 characters
