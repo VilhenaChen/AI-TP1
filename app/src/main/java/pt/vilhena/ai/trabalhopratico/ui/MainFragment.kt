@@ -74,8 +74,8 @@ class MainFragment : Fragment() {
                     playAnimation()
                 }
                 R.id.radioButtonRunning -> {
-                    viewModel.setSelectedActivity(ActivitiesEnum.RUNNING.activity)
-                    setAnimation(ActivitiesEnum.RUNNING.animationResource)
+                    viewModel.setSelectedActivity(ActivitiesEnum.STANDING.activity)
+                    setAnimation(ActivitiesEnum.STANDING.animationResource)
                     playAnimation()
                 }
                 R.id.radioButtonClimbingUp -> {

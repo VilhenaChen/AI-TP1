@@ -68,7 +68,7 @@
                 android:id="@+id/radioButtonRunning"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/running" />
+                android:text="@string/standing" />
             <RadioButton
                 android:id="@+id/radioButtonClimbingUp"
                 android:layout_width="wrap_content"
