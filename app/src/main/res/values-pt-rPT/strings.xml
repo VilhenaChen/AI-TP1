@@ -3,7 +3,7 @@
     <string name="app_name">Activity Monitor Ambience Intelligence</string>
     <string name="start">Começar</string>
     <string name="stop">Parar</string>
-    <string name="running">Correr</string>
+    <string name="standing">Parado</string>
     <string name="walking">Andar</string>
     <string name="climbing_up_stairs">Subir escadas</string>
     <string name="climbing_down_stairs">Descer escadas</string>
