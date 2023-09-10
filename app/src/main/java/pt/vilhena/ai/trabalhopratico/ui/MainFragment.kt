@@ -17,6 +17,7 @@ class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
     private val viewModel: SharedViewModel by activityViewModels()
+    private var isAutomaticMode = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,8 +43,15 @@ class MainFragment : Fragment() {
             if (binding.activityChooser.checkedRadioButtonId == -1) {
                 Toast.makeText(context, R.string.missing_activity_toast, Toast.LENGTH_SHORT).show()
             } else {
+                isAutomaticMode = false
                 startCapture()
             }
+        }
+
+        binding.automaticButton.setOnClickListener {
+            binding.activityAnimation.setAnimation(R.raw.hi_animation)
+            isAutomaticMode = true
+            startCapture()
         }
 
         binding.activityChooser.setOnCheckedChangeListener { _, checkedId ->
@@ -99,13 +107,21 @@ class MainFragment : Fragment() {
 
     //  Start capture sensor data
     private fun startCapture() {
-        binding.secondaryButton.setOnClickListener {
-            stopCapture()
+        if (isAutomaticMode) {
+            viewModel.currentActivity.observe(viewLifecycleOwner) {
+                binding.informationText.text = resources.getText(getActivityString(it))
+            }
+        } else {
+            binding.informationText.text = viewModel.currentActivity.value?.let {
+                getActivityString(
+                    it,
+                )
+            }?.let { resources.getText(it) }
         }
-        binding.informationText.text = viewModel.currentActivity.value
         binding.activityChooser.isVisible = false
         binding.timer.isVisible = true
         binding.primaryButton.isVisible = false
+        binding.automaticButton.isVisible = false
         binding.secondaryButton.isVisible = true
         if (!viewModel.activityStarted) {
             viewModel.startCapture()
@@ -114,10 +130,16 @@ class MainFragment : Fragment() {
             isVisible = true
             text = viewModel.sessionID
         }
+        binding.secondaryButton.setOnClickListener {
+            stopCapture()
+        }
     }
 
     //  Stop capture sensor data
     private fun stopCapture() {
+        if (viewModel.currentActivity.hasActiveObservers()) {
+            viewModel.currentActivity.removeObservers(viewLifecycleOwner)
+        }
         viewModel.stopCapture()
         binding.activityChooser.clearCheck()
         binding.activityAnimation.setAnimation(R.raw.hi_animation)
@@ -125,6 +147,7 @@ class MainFragment : Fragment() {
         binding.activityChooser.isVisible = true
         binding.timer.isVisible = false
         binding.primaryButton.isVisible = true
+        binding.automaticButton.isVisible = true
         binding.secondaryButton.isVisible = false
         binding.sessionId.apply {
             isVisible = false
@@ -137,6 +160,16 @@ class MainFragment : Fragment() {
             Toast.makeText(context, R.string.file_sent_success, Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(context, R.string.file_sent_error, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun getActivityString(activity: String): Int {
+        return when (activity) {
+            ActivitiesEnum.WALKING.activity -> ActivitiesEnum.WALKING.stringResource
+            ActivitiesEnum.STANDING.activity -> ActivitiesEnum.STANDING.stringResource
+            ActivitiesEnum.CLIMBING_UP_STAIRS.activity -> ActivitiesEnum.CLIMBING_UP_STAIRS.stringResource
+            ActivitiesEnum.CLIMBING_DOWN_STAIRS.activity -> ActivitiesEnum.CLIMBING_DOWN_STAIRS.stringResource
+            else -> R.string.activity_loading
         }
     }
 }

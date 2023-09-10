@@ -14,4 +14,6 @@
     <string name="info_text">This application was developed in the context of the Practical Assignment of the curricular unit Ambience Intelligence integrated in the MSc in Informatics Engineering Specialization field of Software Engineering of the Instituto Superior de Engenharia de Coimbra (ISEC).\n\nAll data collected by the application is anonymous and will only be used in an academic context. In case the Application cannot sent the activity file to the server, it will be saved on the Phone Documents folder \n\nAll animations were downloaded from: https://lottiefiles.com/ \n\n For the App Icon it was used a mix of icons from https://www.flaticon.com.\n\nFor further information please contact Diogo Vilhena - a21280358@isec.pt</string>
     <string name="file_sent_success">The activity was sent successfully</string>
     <string name="file_sent_error">The activity was not sent saved on the Documents folders</string>
+    <string name="activity_loading">Finding…</string>
+    <string name="automatic_button">Automatic Mode</string>
 </resources>
