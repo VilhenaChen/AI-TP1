@@ -24,7 +24,7 @@ import kotlin.system.measureTimeMillis
 class SharedViewModel(private val application: Application) : AndroidViewModel(application) {
 
     var activityStarted = false
-    private var isAutomatic = true
+    var isAutomatic = true
     private var firstTime = true
 
     private var sensorRecordingJob: Job? = null
@@ -56,7 +56,12 @@ class SharedViewModel(private val application: Application) : AndroidViewModel(a
         activityStarted = true
         fileUtils = FileUtils(isAutomatic)
         wekaService = WekaService(application)
-        createSessionID()
+        if (isAutomatic) {
+            fileUtils.createFileModel("automatic", "automatic")
+            wekaJob = viewModelScope.launch(Dispatchers.IO) { guessActivity().collect { } }
+        } else {
+            createSessionID()
+        }
         sensorCaptureService.registerSensorsListeners()
         sensorRecordingJob = GlobalScope.launch(Dispatchers.IO) {
             recordSensorData().collect { }
@@ -66,9 +71,6 @@ class SharedViewModel(private val application: Application) : AndroidViewModel(a
                 _elapsedTime.postValue(formatTime(it))
             }
         }
-        if (isAutomatic) {
-            fileUtils.createFileModel("automatic", "automatic")
-            wekaJob = GlobalScope.launch { guessActivity().collect { } } }
     }
 
     //  Capture sensor data in 50Hz/20ms
@@ -142,7 +144,7 @@ class SharedViewModel(private val application: Application) : AndroidViewModel(a
             val timeElapsed = measureTimeMillis {
                 if (!firstTime) {
                     val activity =
-                        wekaService.wekaClassifyFromModel(fileUtils.prepLastLineForWeka())
+                        wekaService.wekaClassifyFromModel(fileUtils.prepLineForWeka())
                     _currentActivity.postValue((activity))
                 } else {
                     firstTime = false
@@ -166,9 +168,12 @@ class SharedViewModel(private val application: Application) : AndroidViewModel(a
         sensorRecordingJob?.cancel()
         timerJob?.cancel()
         wekaJob?.cancel()
-        viewModelScope.launch(Dispatchers.IO) {
-            _fileSentFlag.postValue(fileUtils.writeFile())
-        }.invokeOnCompletion { if (fileSentFlag.value == true) fileUtils.deleteLocalFile() }
+        if (!isAutomatic) {
+            viewModelScope.launch(Dispatchers.IO) {
+                _fileSentFlag.postValue(fileUtils.writeFile())
+            }.invokeOnCompletion { if (fileSentFlag.value == true) fileUtils.deleteLocalFile() }
+        }
+        fileUtils.deleteLines()
     }
 
     //  Create SessionID based on date, time and a random 3 characters

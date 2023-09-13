@@ -120,18 +120,8 @@ class FileUtils(private val isAutomatic: Boolean) {
         }
     }
 
-    //  Remove the prefix and Suffix of the last line and return it for Weka to classify
-//    fun prepLastLineForWeka(): String {
-//        val stringBuild = StringBuilder()
-//        fileModel.getLastLine().map { line ->
-//            stringBuild.append(line.toString().removePrefix("[").removeSuffix("]"))
-//        }
-//        return stringBuild.toString()
-//    }
-
-    fun prepLastLineForWeka(): String {
-        val linesList = fileModel.getLines()
-        fileModel.removeLines()
+    fun prepLineForWeka(): String {
+        val linesList = fileModel.getLinesWeka()
         var altAverage: Double = 0.0
         var accuracyAverage: Double = 0.0
         var bearingAverage: Double = 0.0
@@ -144,9 +134,8 @@ class FileUtils(private val isAutomatic: Boolean) {
         var xMagAverage: Double = 0.0
         var yMagAverage: Double = 0.0
         var zMagAverage: Double = 0.0
-        Log.d("ff", linesList.toString())
         linesList.forEach {
-            val line = it.toString().removePrefix("[").removeSuffix("]")
+            val line = it.removePrefix("[").removeSuffix("]")
             val values = line.split(",")
             altAverage += values[0].toDouble()
             accuracyAverage += values[1].toDouble()
@@ -175,4 +164,6 @@ class FileUtils(private val isAutomatic: Boolean) {
         zMagAverage /= 250
         return "$altAverage,$accuracyAverage,$bearingAverage,$xAccAverage,$yAccAverage,$zAccAverage,$xGyroAverage,$yGyroAverage,$zGyroAverage,$xMagAverage,$yMagAverage,$zMagAverage"
     }
+
+    fun deleteLines() { fileModel.deleteAllLines() }
 }

@@ -63,7 +63,9 @@ data class FileModel(val fileName: String, val isAutomatic: Boolean) {
         return lines.map { listOf(it) }
     }
 
-    fun removeLines() {
+    fun getLinesWeka(): List<String> = lines.takeLast(250)
+
+    fun deleteAllLines() {
         lines.clear()
     }
 }

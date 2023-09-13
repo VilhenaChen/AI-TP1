@@ -54,6 +54,7 @@ class WekaService(
 
             val denseInstance = DenseInstance(12)
             Log.d("ff", "${array[0].toDouble()}")
+            Log.d("dd", array.toString())
 
             Log.d("ff", "Num attributes: ${denseInstance.numAttributes()}")
             Log.d("ff", "Num values: ${denseInstance.numValues()}")
@@ -73,8 +74,9 @@ class WekaService(
             instance.add(denseInstance)
 
             val pred = scheme.classifyInstance(instance.instance(0))
+            Log.d("ff", "pred: $pred")
             val predi = instance.classAttribute().value(pred.toInt())
-            Log.d("ff", "pred: $predi")
+            Log.d("ff", "predi: $predi")
             return predi
         } catch (e: Exception) {
             e.printStackTrace()

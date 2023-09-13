@@ -107,6 +107,10 @@ class MainFragment : Fragment() {
 
     //  Start capture sensor data
     private fun startCapture() {
+        viewModel.isAutomatic = isAutomaticMode
+        if (!viewModel.activityStarted) {
+            viewModel.startCapture()
+        }
         if (isAutomaticMode) {
             viewModel.currentActivity.observe(viewLifecycleOwner) {
                 binding.informationText.text = resources.getText(getActivityString(it))
@@ -117,19 +121,17 @@ class MainFragment : Fragment() {
                     it,
                 )
             }?.let { resources.getText(it) }
+
+            binding.sessionId.apply {
+                isVisible = true
+                text = viewModel.sessionID
+            }
         }
         binding.activityChooser.isVisible = false
         binding.timer.isVisible = true
         binding.primaryButton.isVisible = false
         binding.automaticButton.isVisible = false
         binding.secondaryButton.isVisible = true
-        if (!viewModel.activityStarted) {
-            viewModel.startCapture()
-        }
-        binding.sessionId.apply {
-            isVisible = true
-            text = viewModel.sessionID
-        }
         binding.secondaryButton.setOnClickListener {
             stopCapture()
         }
